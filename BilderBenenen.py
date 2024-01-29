@@ -1,4 +1,3 @@
-"""#!/usr/bin/env python3
 ### schebang line -  welcher Interpreter
 
 
@@ -97,6 +96,6 @@ if __name__ == '__main__':
     liste_datum_uhrzeitneu_nummer_jpg = mache_neu_uhrzeit(liste_uhrzeiten, liste_reihenfolge_datum_uhrzeit_nummer_jpg)
     liste_datum_uhrzeitneu_ohne_nummer_jpg = erstelle_liste_ohne_zahl(liste_datum_uhrzeitneu_nummer_jpg)
     
-    drucke_liste(liste_datum_uhrzeitneu_ohne_nummer_jpg)"""
+    drucke_liste(liste_datum_uhrzeitneu_ohne_nummer_jpg)
     
     
