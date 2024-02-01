@@ -1,4 +1,3 @@
-"""#!/usr/bin/env python3
 ### schebang line -  welcher Interpreter
 
 
@@ -116,5 +115,5 @@ if __name__ == '__main__':
     error_liste = liefere_fehlerliste(liste_aus_listen_alles_zusammenpassenden_zeilen)
     
     #drucke_doppelte_liste(error_liste)
-    drucke_doppelte_liste(liste_aus_listen_alles_zusammenpassenden_zeilen)"""
+    drucke_doppelte_liste(liste_aus_listen_alles_zusammenpassenden_zeilen)
     
