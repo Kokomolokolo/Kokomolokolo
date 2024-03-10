@@ -1,0 +1,132 @@
+import pygame
+pygame.init()
+
+# Funktionen Und Klassen
+def main():
+    run = True
+    barrier = pygame.Rect(490, 0, 20, WIDTH)
+    player1 = pygame.Rect(850, 300, PLAYER_WIDTH, PLAYER_HEIGHT)
+    player2 = pygame.Rect(150, 300, PLAYER_WIDTH, PLAYER_HEIGHT)
+    bullet_status_1 = "loaded"
+    bullet_status_2 = "loaded"
+    bullet_velocity = 10
+    bullet1 = pygame.Rect(1010, 810, 1, 1)
+    bullet2 = pygame.Rect(1030, 850, 1, 1)
+    clock = pygame.time.Clock()
+    lives_player_1 = 5
+    lives_player_2 = 5
+    
+    while run:
+        clock.tick(60)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                break
+        
+        keys = pygame.key.get_pressed()
+
+        players_movement(keys, player1, player2, barrier)
+
+        # Bullets1
+        if keys[pygame.K_KP_ENTER] and bullet_status_1 == "loaded":
+            bullet_status_1 = "fierd"
+            bullet1_X = player1.x
+            bullet1_Y = player1.y + 15
+            bullet1 = pygame.Rect(bullet1_X, bullet1_Y, 10, 10)
+        if bullet_status_1 == "fierd":
+            bullet1.x -= bullet_velocity
+        if bullet1.x <= 0:
+            bullet_status_1 = "loaded"
+            bullet1 = pygame.Rect(1010, 810, 1, 1)
+        if bullet1.colliderect(player2):
+            bullet_status_1 = "loaded"
+            bullet1 = pygame.Rect(1020, 830, 1, 1)
+            
+            lives_player_2 -= 1
+            pygame.display.update()
+        # Bullet 2
+        if keys[pygame.K_SPACE] and bullet_status_2 == "loaded":
+            bullet_status_2 = "fierd"
+            bullet2_X = player2.x
+            bullet2_Y = player2.y + 15
+            bullet2 = pygame.image.load("bullet.png")
+            bullet2 = pygame.Rect(bullet2_X, bullet2_Y, 10, 10)
+        if bullet_status_2 == "fierd":
+            bullet2.x += bullet_velocity
+        if bullet2.x >= 1000:
+            bullet_status_2 = "loaded"
+            bullet2 = pygame.Rect(1020, 830, 1, 1)
+        if bullet2.colliderect(player1):
+            bullet2 = pygame.Rect(1020, 830, 1, 1)
+            bullet_status_2 = "loaded"
+            lives_player_1 -= 1
+            pygame.display.update()
+            
+
+        if player1.colliderect(barrier) or player2.colliderect(barrier):
+            print("Debug: Player X Barrier")
+        if lives_player_1 == 0:
+            lost_text = FONT.render("Player 2 Won", 1, "blue")
+            WIN.blit(lost_text, (100, 100))
+            pygame.display.update()
+            pygame.time.delay(4000)
+            break
+        if lives_player_2 == 0:
+            lost_text = FONT.render("Player 1 Won", 1, "red")
+            WIN.blit(lost_text, (100, 100))
+            pygame.display.update()
+            pygame.time.delay(4000)
+            break
+             
+        
+        draw(player1, player2, barrier, bullet1, bullet2, lives_player_2, lives_player_1)
+    pygame.quit()
+
+def players_movement(keys, player1, player2, barrier):
+    # P1
+    if keys[pygame.K_LEFT] and player1.x - PLAYER_VELOCITY >= 0 and player1.colliderect(barrier) == False:
+        player1.x -= PLAYER_VELOCITY
+    if keys[pygame.K_RIGHT] and player1.x + PLAYER_VELOCITY + player1.width <= WIDTH:
+        player1.x += PLAYER_VELOCITY
+    if keys[pygame.K_UP] and player1.y >= 0:
+        player1.y -= PLAYER_VELOCITY
+    if keys[pygame.K_DOWN] and player1.y + PLAYER_HEIGHT <= HEIGHT:
+        player1.y += PLAYER_VELOCITY
+    # P2
+    if keys[pygame.K_a] and player2.x - PLAYER_VELOCITY >= 0:
+        player2.x -= PLAYER_VELOCITY
+    if keys[pygame.K_d] and player2.x + PLAYER_VELOCITY + player2.width <= WIDTH and player2.colliderect(barrier) == False:
+        player2.x += PLAYER_VELOCITY
+    if keys[pygame.K_w] and player2.y >= 0:
+        player2.y -= PLAYER_VELOCITY
+    if keys[pygame.K_s] and player2.y + PLAYER_HEIGHT<= HEIGHT:
+        player2.y += PLAYER_VELOCITY
+
+def draw(player1, player2, barrier, bullet1, bullet2, lives_player_2, lives_player_1):
+    WIN.blit(BG, (0, 0))
+    pygame.draw.rect(WIN, "red", player1)
+    pygame.draw.rect(WIN, "blue", player2)
+    pygame.draw.rect(WIN, "black", barrier)
+    pygame.draw.rect(WIN, "red", bullet1)
+    pygame.draw.rect(WIN, "blue", bullet2)
+    text_lives_2 = FONT.render(f"Lives: {lives_player_2}", 1, "blue")
+    WIN.blit(text_lives_2, (0,0))
+    text_lives_1 = FONT.render(f"Lives: {lives_player_1}", 1, "red")
+    WIN.blit(text_lives_1, (890,0))
+    pygame.display.update()
+
+# Code
+if __name__ == '__main__':
+    WIDTH, HEIGHT = 1000 , 600
+    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("CAPTION")
+    BG = pygame.image.load("bg.jpeg")
+    PLAYER_HEIGHT = 40
+    PLAYER_WIDTH = 40
+
+    PLAYER_VELOCITY = 5
+    FONT = pygame.font.SysFont("comicsans", 30)
+
+
+    main()
