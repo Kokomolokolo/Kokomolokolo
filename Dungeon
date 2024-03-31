@@ -1,0 +1,82 @@
+import pygame
+import math
+import time
+pygame.init()
+#### Hier stehen Funktionen und Klassen
+
+def main():
+    run = True
+    # Player
+    player1 = pygame.Rect(WIDTH/2, HEIGHT/2, PLAYER_HEIGHT, PLAYER_WIDTH)
+    player1_img = pygame.image.load("wizard.png")
+    player1_img = pygame.transform.scale(player1_img ,(PLAYER_WIDTH, PLAYER_HEIGHT))
+    facing = {"top"}
+    # Clock
+    clock = pygame.time.Clock()
+    # Abilities
+    time_shot_ability1 = -1
+    ability1 = pygame.Rect(0, 0, 0 ,0)
+    ability1_state = "ready"
+
+    while run:
+        clock.tick(60)
+        keys = pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                break
+        
+        player_movement(player1, keys, facing)
+        if keys[pygame.K_h] and ability1_state == "ready":
+            ability1 = player_ability1(player1, keys)
+            ability1_state = "cooldown"
+            time_shot_ability1 = time.time()
+        if time_shot_ability1 + 2 <= time.time():
+            ability1_state = "ready"
+
+        draw(player1, player1_img, ability1)
+    pygame.quit()
+
+def player_movement(player1, keys, facing):
+    if keys[pygame.K_a] and  player1.x - PLAYER_VELOCITY >= 0:
+        player1.x -= PLAYER_VELOCITY
+        facing.clear()
+        facing.add("left")
+    if keys[pygame.K_d] and  player1.x + PLAYER_VELOCITY + PLAYER_WIDTH <= WIDTH:
+        player1.x += PLAYER_VELOCITY
+        facing.clear()
+        facing.add("right")
+    if keys[pygame.K_w] and player1.y - PLAYER_VELOCITY >= 0:
+        player1.y -= PLAYER_VELOCITY
+        facing.clear()
+    if keys[pygame.K_s]and player1.y + PLAYER_VELOCITY + PLAYER_HEIGHT <= HEIGHT:
+        player1.y += PLAYER_VELOCITY
+        facing.clear()
+
+def player_ability1(player1, keys):
+    hitbox = pygame.Rect(player1.x - PLAYER_WIDTH, player1.y, PLAYER_WIDTH * 3, PLAYER_HEIGHT)
+    return hitbox
+    
+        
+        
+
+def draw(player1, player1_img, ability1):
+    #WIN.blit(BG, (0, 0))
+    WIN.fill("black")
+    if debug == True:
+        pygame.draw.rect(WIN,"red", player1)
+    WIN.blit(player1_img, (player1.x, player1.y))
+    pygame.draw.rect(WIN, "red", ability1)
+    pygame.display.update()
+
+###Hier steht das Hauptprogramm
+if __name__ == '__main__':
+    #Hier steht der Programmcode
+    WIDTH, HEIGHT = 1000, 800
+    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Dungeon :)")
+    PLAYER_WIDTH, PLAYER_HEIGHT = 50, 50
+    PLAYER_VELOCITY = 5
+    BG = pygame.image.load("bg.png")
+    debug = False
+    main()
