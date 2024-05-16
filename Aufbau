@@ -1,0 +1,25 @@
+import pygame as py
+import time
+py.init()
+
+def main():
+    run = True
+    while run
+        clock.tick(60)
+        for event in py.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                break
+        draw()
+    py.quit()
+
+def draw():
+    WIN.fill("black")
+    py.display.update()
+
+### Code
+if __name__ == '__main__':
+    WIDTH, HEIGHT = 1000, 1000
+    WIN = py.display.set_mode((WIDTH, HEIGHT))
+    py.display.set_caption(("Game"))
+    main()
